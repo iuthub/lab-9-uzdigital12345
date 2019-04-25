@@ -2,53 +2,20 @@
 
 namespace App;
 
-class Post
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
 {
-    public function getPosts($session)
+    protected $fillable = ['title','content'];
+    
+    public function likes()
     {
-        if (!$session->has('posts')) {
-            $this->createDummyData($session);
-        }
-        return $session->get('posts');
+    	return $this->hasMany('App\Like','post_id');	
     }
 
-    public function getPost($session, $id)
+    public function tags()
     {
-        if (!$session->has('posts')) {
-            $this->createDummyData();
-        }
-        return $session->get('posts')[$id];
+    	return $this->belongsToMany('App\Tag','post_tag','post_id','tag_id')->withTimestamps();
     }
-
-    public function addPost($session, $title, $content)
-    {
-        if (!$session->has('posts')) {
-            $this->createDummyData();
-        }
-        $posts = $session->get('posts');
-        array_push($posts, ['title' => $title, 'content' => $content]);
-        $session->put('posts', $posts);
-    }
-
-    public function editPost($session, $id, $title, $content)
-    {
-        $posts = $session->get('posts');
-        $posts[$id] = ['title' => $title, 'content' => $content];
-        $session->put('posts', $posts);
-    }
-
-    private function createDummyData($session)
-    {
-        $posts = [
-            [
-                'title' => 'Learning Laravel',
-                'content' => 'This blog post will get you right on track with Laravel!'
-            ],
-            [
-                'title' => 'Something else',
-                'content' => 'Some other content'
-            ]
-        ];
-        $session->put('posts', $posts);
-    }
+    
 }

@@ -1,5 +1,11 @@
 @extends('layouts.admin')
-
+@foreach($tags as $tag)
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" name="tags[]" value="{{ $tag->id }}" {{ $post->tags->contains($tag->id) ? 'checked' : '' }}> {{ $tag->name }}            
+        </label>
+    </div>
+@endforeach
 @section('content')
     @include('partials.errors')
     <div class="row">
@@ -12,7 +18,7 @@
                             class="form-control"
                             id="title"
                             name="title"
-                            value="{{ $post['title'] }}">
+                            value="{{ $post->title }}">
                 </div>
                 <div class="form-group">
                     <label for="content">Content</label>
@@ -21,7 +27,7 @@
                             class="form-control"
                             id="content"
                             name="content"
-                            value="{{ $post['content'] }}">
+                            value="{{ $post->content }}">
                 </div>
                 {{ csrf_field() }}
                 <input type="hidden" name="id" value="{{ $postId }}">
